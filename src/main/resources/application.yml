@@ -1,0 +1,64 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        # Users Service (8081)
+        - id: users-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/users/**
+          filters:
+            - StripPrefix=0
+
+        - id: auth-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=0
+
+        # Accommodations Service (8082)
+        - id: accommodations-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/accommodations/**
+          filters:
+            - StripPrefix=0
+
+        # Bookings Service (8083)
+        - id: bookings-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/booking-requests/**
+          filters:
+            - StripPrefix=0
+
+        # Reviews Service (8084)
+        - id: host-reviews-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/host-reviews/**
+          filters:
+            - StripPrefix=0
+
+        - id: traveler-reviews-service
+          uri: http://localhost:8084
+          predicates:
+            - Path=/traveler-reviews/**
+          filters:
+            - StripPrefix=0
+
+# Configuración de seguridad JWT
+jwt:
+  secret: shareYourTripSecretKey2024ParaFirmarTokensJWTDebeSerMuyLargaParaSeguridad
+  expiration: 86400000 # 24 horas en milisegundos
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.security: DEBUG
